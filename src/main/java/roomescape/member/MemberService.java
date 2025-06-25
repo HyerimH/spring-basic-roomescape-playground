@@ -36,7 +36,7 @@ public class MemberService {
                 .compact();
     }
 
-    public MemberResponse checkLogin(String token) {
+    public LoginMember checkLogin(String token) {
         try {
             Long memberId = Long.valueOf(Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
@@ -45,7 +45,7 @@ public class MemberService {
                     .getBody()
                     .getSubject());
             Member member = memberDao.findById(memberId);
-            return new MemberResponse(member.getName());
+            return new LoginMember(member.getId(), member.getName(), member.getEmail(), member.getRole());
         } catch (Exception e) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }

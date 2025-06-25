@@ -35,7 +35,7 @@ public class MemberController {
     }
 
     @GetMapping("/login/check")
-    public ResponseEntity<MemberResponse> checkLogin(HttpServletRequest request) {
+    public ResponseEntity<LoginMember> checkLogin(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String token = memberService.extractTokenFromCookie(cookies);
         return ResponseEntity.ok(memberService.checkLogin(token));
