@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
-import roomescape.member.LoginMember;
-import roomescape.member.Member;
+import roomescape.auth.LoginMember;
 
 @RestController
 public class ReservationController {

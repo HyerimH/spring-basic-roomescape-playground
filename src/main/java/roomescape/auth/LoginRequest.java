@@ -1,4 +1,4 @@
-package roomescape.member;
+package roomescape.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

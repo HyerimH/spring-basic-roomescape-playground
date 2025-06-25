@@ -1,7 +1,7 @@
 package roomescape.reservation;
 
 import jakarta.validation.constraints.NotNull;
-import roomescape.member.LoginMember;
+import roomescape.auth.LoginMember;
 
 public record ReservationRequest(
         String name,

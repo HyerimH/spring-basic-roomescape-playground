@@ -3,8 +3,7 @@ package roomescape.reservation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import roomescape.member.LoginMember;
-import roomescape.member.MemberResponse;
+import roomescape.auth.LoginMember;
 
 @Service
 public class ReservationService {

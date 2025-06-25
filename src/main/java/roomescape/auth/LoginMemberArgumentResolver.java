@@ -1,4 +1,4 @@
-package roomescape.member;
+package roomescape.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberService memberService;
+    private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -25,7 +26,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             NativeWebRequest webRequest, WebDataBinderFactory binderFactory)
             throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String token = memberService.extractTokenFromCookie(request.getCookies());
-        return memberService.checkLogin(token);
+        String token = jwtTokenProvider.extractTokenFromCookie(request.getCookies());
+        return authService.checkLogin(token);
     }
 }
