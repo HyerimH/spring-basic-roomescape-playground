@@ -14,6 +14,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
 import java.util.Map;
+import roomescape.member.LoginRequest;
 import roomescape.reservation.ReservationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -86,16 +87,36 @@ public class MissionStepTest {
         assertThat(adminResponse.as(ReservationResponse.class).name()).isEqualTo("브라운");
     }
 
-    public String createToken(String mail, String password) {
-        String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
-        String accessToken = Jwts.builder()
-                .setSubject("1")
-                .claim("name", "어드민")
-                .claim("role", "admin")
-                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                .compact();
+    private String createToken(String email, String password) {
+        LoginRequest loginRequest = new LoginRequest(email, password);
+        return RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(loginRequest)
+                .post("/login")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .cookie("token");
+    }
 
-        return accessToken;
+    @Test
+    @DisplayName("각 사용자는 권한에 맞게 접근할 수 있다")
+    void 삼단계() {
+        String brownToken = createToken("brown@email.com", "password");
+
+        RestAssured.given().log().all()
+                .cookie("token", brownToken)
+                .get("/admin")
+                .then().log().all()
+                .statusCode(401);
+
+        String adminToken = createToken("admin@email.com", "password");
+
+        RestAssured.given().log().all()
+                .cookie("token", adminToken)
+                .get("/admin")
+                .then().log().all()
+                .statusCode(200);
     }
 }
 
