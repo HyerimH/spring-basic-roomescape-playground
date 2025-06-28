@@ -8,20 +8,26 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 @RequiredArgsConstructor
-public class AdminInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
     private final AuthService authService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        LoginMember member = authService.checkLogin(request.getCookies());
+        try {
+            LoginMember member = authService.checkLogin(request.getCookies());
 
-        if (member == null || !member.isAdmin()) {
+            if (member == null) {
+                response.setStatus(401);
+                return false;
+            }
+
+            return true;
+
+        } catch (Exception e) {
             response.setStatus(401);
             return false;
         }
-
-        return true;
     }
 }
