@@ -1,7 +1,10 @@
 package roomescape.auth;
 
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import roomescape.exception.CustomException;
+import roomescape.exception.ErrorCode;
 import roomescape.member.Member;
 import roomescape.member.MemberDao;
 
@@ -12,18 +15,49 @@ public class AuthService {
     private final MemberDao memberDao;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public String login(LoginRequest loginRequest) {
+    public Cookie login(LoginRequest loginRequest) {
         Member member = memberDao.findByEmailAndPassword(loginRequest.email(), loginRequest.password());
-        return jwtTokenProvider.createToken(member);
+        if (member == null) {
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        String token = jwtTokenProvider.createToken(member);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        return cookie;
     }
 
-    public LoginMember checkLogin(String token) {
+    public LoginMember checkLogin(Cookie[] cookies) {
+        String token = extractTokenFromCookie(cookies);
+        if (token.isEmpty()) {
+            throw new CustomException(ErrorCode.EMPTY_TOKEN);
+        }
         try {
             Long memberId = jwtTokenProvider.extractMemberId(token);
             Member member = memberDao.findById(memberId);
             return new LoginMember(member.getId(), member.getName(), member.getEmail(), member.getRole());
         } catch (Exception e) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
+    }
+
+    public Cookie logout() {
+        Cookie cookie = new Cookie("token", "");
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        return cookie;
+    }
+
+    public String extractTokenFromCookie(Cookie[] cookies) {
+        if (cookies == null) {
+            return "";
+        }
+        for (Cookie cookie : cookies) {
+            if ("token".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return "";
     }
 }

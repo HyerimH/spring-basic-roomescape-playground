@@ -21,25 +21,20 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest,
                                       HttpServletResponse response) {
-        String token = authService.login(loginRequest);
-        Cookie cookie = jwtTokenProvider.createCookie(token);
+        Cookie cookie = authService.login(loginRequest);
         response.addCookie(cookie);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/login/check")
     public ResponseEntity<LoginMember> checkLogin(HttpServletRequest request) {
-        String token = jwtTokenProvider.extractTokenFromCookie(request.getCookies());
-        LoginMember loginMember = authService.checkLogin(token);
+        LoginMember loginMember = authService.checkLogin(request.getCookies());
         return ResponseEntity.ok(loginMember);
     }
 
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("token", "");
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(0);
+        Cookie cookie = authService.logout();
         response.addCookie(cookie);
         return ResponseEntity.ok().build();
     }
