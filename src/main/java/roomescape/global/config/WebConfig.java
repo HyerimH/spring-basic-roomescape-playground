@@ -1,0 +1,36 @@
+package roomescape.global.config;
+
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.ssl.DefaultSslBundleRegistry;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import roomescape.global.auth.AdminInterceptor;
+import roomescape.global.auth.AuthInterceptor;
+import roomescape.global.auth.LoginMemberArgumentResolver;
+
+@Configuration
+@RequiredArgsConstructor
+public class WebConfig implements WebMvcConfigurer {
+
+    private final AdminInterceptor adminInterceptor;
+    private final AuthInterceptor authInterceptor;
+    private final LoginMemberArgumentResolver loginMemberArgumentResolver;
+    private final DefaultSslBundleRegistry sslBundleRegistry;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(adminInterceptor)
+                .addPathPatterns("/admin/**");
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login", "/signup");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(loginMemberArgumentResolver);
+    }
+}

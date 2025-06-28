@@ -11,8 +11,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
 import java.util.Map;
-import roomescape.auth.LoginRequest;
-import roomescape.reservation.ReservationResponse;
+import roomescape.global.auth.LoginRequest;
+import roomescape.domain.reservation.ReservationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
