@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import roomescape.global.auth.AuthenticatedMember;
 import roomescape.global.auth.LoginMember;
 
 @RestController
@@ -29,7 +30,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity create(@Valid @RequestBody ReservationRequest reservationRequest,
-            LoginMember member) {
+            @AuthenticatedMember LoginMember member) {
 
         ReservationResponse reservation = reservationService.save(reservationRequest, member);
         return ResponseEntity.created(URI.create("/reservations/" + reservation.id())).body(reservation);
