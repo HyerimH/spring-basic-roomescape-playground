@@ -1,19 +1,5 @@
 package roomescape.domain.member;
 
-public class MemberRequest {
-    private String name;
-    private String email;
-    private String password;
+public record MemberRequest(String name, String email, String password) {
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 }
