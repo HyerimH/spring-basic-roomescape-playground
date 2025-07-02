@@ -45,6 +45,12 @@
   - '/admin' 경로에 대한 접근은 ADMIN 권한이 있는 사용자만 가능
 
 ### Step 4
-- [] JPA 활용 데이터베이스 접근
+- [V] JPA 활용 데이터베이스 접근
   - 엔티티 매핑
   - 연관관계 매핑
+
+### Step 5
+- [V] '/reservations-mine' API 구현
+  - 토큰 통해서 사용자 인증 요청
+  - MyReservationResponse DTO로 예약 정보 반환
+- [V] reservation 테이블에 member_id 칼럼 추가
