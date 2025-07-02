@@ -1,4 +1,4 @@
-CREATE TABLE time
+CREATE TABLE IF NOT EXISTS time
 (
     id         BIGINT      NOT NULL AUTO_INCREMENT,
     time_value VARCHAR(20) NOT NULL,
@@ -6,7 +6,7 @@ CREATE TABLE time
     PRIMARY KEY (id)
 );
 
-CREATE TABLE theme
+CREATE TABLE IF NOT EXISTS theme
 (
     id          BIGINT       NOT NULL AUTO_INCREMENT,
     name        VARCHAR(255) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE theme
     PRIMARY KEY (id)
 );
 
-CREATE TABLE member
+CREATE TABLE IF NOT EXISTS member
 (
     id       BIGINT              NOT NULL AUTO_INCREMENT,
     name     VARCHAR(255)        NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE member
     PRIMARY KEY (id)
 );
 
-CREATE TABLE reservation
+CREATE TABLE IF NOT EXISTS reservation
 (
     id       BIGINT       NOT NULL AUTO_INCREMENT,
     date     VARCHAR(255) NOT NULL,
@@ -41,18 +41,18 @@ INSERT INTO member (name, email, password, role)
 VALUES ('어드민', 'admin@email.com', 'password', 'ADMIN'),
        ('브라운', 'brown@email.com', 'password', 'USER');
 
-INSERT INTO theme (name, description)
-VALUES ('테마1', '테마1입니다.'),
-       ('테마2', '테마2입니다.'),
-       ('테마3', '테마3입니다.');
+INSERT INTO theme (name, description, deleted)
+VALUES ('테마1', '테마1입니다.', FALSE),
+       ('테마2', '테마2입니다.', FALSE),
+       ('테마3', '테마3입니다.', FALSE);
 
-INSERT INTO time (time_value)
-VALUES ('10:00'),
-       ('12:00'),
-       ('14:00'),
-       ('16:00'),
-       ('18:00'),
-       ('20:00');
+INSERT INTO time (time_value, deleted)
+VALUES ('10:00', FALSE),
+       ('12:00', FALSE),
+       ('14:00', FALSE),
+       ('16:00', FALSE),
+       ('18:00', FALSE),
+       ('20:00', FALSE);
 
 INSERT INTO reservation (name, date, time_id, theme_id)
 VALUES ('어드민', '2024-03-01', 1, 1),
