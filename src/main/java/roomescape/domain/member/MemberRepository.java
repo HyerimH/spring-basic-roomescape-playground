@@ -5,14 +5,12 @@ import static roomescape.global.exception.ErrorCode.USER_NOT_FOUND;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.NoSuchElementException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import roomescape.global.exception.CustomException;
 
 @Repository
-public class MemberRespository {
+public class MemberRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

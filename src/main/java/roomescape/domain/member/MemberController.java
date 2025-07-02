@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import roomescape.domain.member.dto.MemberRequest;
+import roomescape.domain.member.dto.MemberResponse;
 
 @RestController
 @RequiredArgsConstructor

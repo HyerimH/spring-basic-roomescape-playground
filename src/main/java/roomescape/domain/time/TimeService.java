@@ -1,23 +1,20 @@
 package roomescape.domain.time;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.Reservation;
-import roomescape.domain.reservation.ReservationRespository;
+import roomescape.domain.reservation.ReservationRepository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TimeService {
-    private TimeRepository timeRepository;
-    private ReservationRespository reservationRespository;
-
-    public TimeService(TimeRepository timeRepository, ReservationRespository reservationRespository) {
-        this.timeRepository = timeRepository;
-        this.reservationRespository = reservationRespository;
-    }
+    private final TimeRepository timeRepository;
+    private final ReservationRepository reservationRepository;
 
     public List<AvailableTime> getAvailableTime(String date, Long themeId) {
-        List<Reservation> reservations = reservationRespository.findByDateAndThemeId(date, themeId);
+        List<Reservation> reservations = reservationRepository.findByDateAndThemeId(date, themeId);
         List<Time> times = timeRepository.findAll();
 
         return times.stream()

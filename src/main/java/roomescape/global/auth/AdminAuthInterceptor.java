@@ -43,12 +43,12 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
             throw new CustomException(FORBIDDEN);
         }
 
-        request.setAttribute("loginMember", member);
+        request.setAttribute("loginMember",
+                new LoginMember(member.getId(), member.getName(), member.getEmail(), member.getRole()));
         return true;
     }
 
     private boolean isAdminRequest(HttpServletRequest request) {
         return request.getRequestURI().startsWith("/admin");
     }
-
 }

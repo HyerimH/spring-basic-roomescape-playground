@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ThemeRespository {
+public class ThemeRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
