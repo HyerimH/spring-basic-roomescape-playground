@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,8 +12,9 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
 import java.util.Map;
+import roomescape.domain.reservation.dto.MyReservationResponse;
 import roomescape.global.auth.LoginRequest;
-import roomescape.domain.reservation.ReservationResponse;
+import roomescape.domain.reservation.dto.ReservationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -115,5 +117,21 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("사용자로 예약 조회를 했을 때 예약 개수가 알맞게 반환된다.")
+    void 오단계() {
+        String adminToken = createToken("admin@email.com", "password");
+
+        List<MyReservationResponse> reservations = RestAssured.given().log().all()
+                .cookie("token", adminToken)
+                .get("/reservations-mine")
+                .then().log().all()
+                .statusCode(200)
+                .extract().jsonPath().getList(".", MyReservationResponse.class);
+
+        assertThat(reservations).hasSize(3);
+    }
 }
+
 
