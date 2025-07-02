@@ -8,10 +8,10 @@ import roomescape.global.auth.LoginMember;
 @Service
 public class ReservationService {
 
-    private ReservationDao reservationDao;
+    private ReservationRespository reservationRespository;
 
-    public ReservationService(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationService(ReservationRespository reservationRespository) {
+        this.reservationRespository = reservationRespository;
     }
 
     public ReservationResponse save(ReservationRequest reservationRequest, LoginMember member) {
@@ -19,17 +19,17 @@ public class ReservationService {
             reservationRequest = ReservationRequest.from(member, reservationRequest);
         }
 
-        Reservation reservation = reservationDao.save(reservationRequest);
+        Reservation reservation = reservationRespository.save(reservationRequest);
 
         return ReservationResponse.from(reservation);
     }
 
     public void deleteById(Long id) {
-        reservationDao.deleteById(id);
+        reservationRespository.deleteById(id);
     }
 
     public List<ReservationResponse> findAll() {
-        return reservationDao.findAll().stream()
+        return reservationRespository.findAll().stream()
                 .map(it -> new ReservationResponse(it.getId(), it.getName(), it.getTheme().getName(), it.getDate(),
                         it.getTime().getValue()))
                 .toList();
