@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
+import roomescape.domain.reservation.dto.MyReservationResponse;
+import roomescape.domain.reservation.dto.ReservationRequest;
+import roomescape.domain.reservation.dto.ReservationResponse;
 import roomescape.global.auth.AuthenticatedMember;
 import roomescape.global.auth.LoginMember;
 
@@ -26,6 +29,12 @@ public class ReservationController {
     @GetMapping("/reservations")
     public List<ReservationResponse> list() {
         return reservationService.findAll();
+    }
+
+    @GetMapping("/reservations-mine")
+    public List<MyReservationResponse> findMyReservations(@AuthenticatedMember LoginMember loginMember) {
+
+        return reservationService.findMyReservations(loginMember);
     }
 
     @PostMapping("/reservations")

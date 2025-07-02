@@ -4,19 +4,17 @@ import static roomescape.global.exception.ErrorCode.RESERVATION_NOT_FOUND;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.member.Member;
+import roomescape.domain.reservation.dto.ReservationRequest;
 import roomescape.domain.theme.Theme;
 import roomescape.domain.time.Time;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import roomescape.global.exception.CustomException;
 
 @Repository
-public class ReservationRespository {
+public class ReservationRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -30,7 +28,7 @@ public class ReservationRespository {
                 .getResultList();
     }
 
-    public Reservation save(ReservationRequest reservationRequest) {
+    public Reservation save(ReservationRequest reservationRequest, Member member) {
         Time time = entityManager.find(Time.class, reservationRequest.time());
         if (time == null || time.isDeleted()) {
             throw new CustomException(RESERVATION_NOT_FOUND);
@@ -45,7 +43,8 @@ public class ReservationRespository {
                 reservationRequest.name(),
                 reservationRequest.date(),
                 time,
-                theme
+                theme,
+                member
         );
         entityManager.persist(reservation);
         return reservation;
@@ -67,6 +66,17 @@ public class ReservationRespository {
                         Reservation.class)
                 .setParameter("date", date)
                 .setParameter("themeId", themeId)
+                .getResultList();
+    }
+
+    public List<Reservation> findByMemberId(Long memberId) {
+        return entityManager.createQuery(
+                        "SELECT r FROM Reservation r " +
+                        "JOIN r.theme t " +
+                        "JOIN r.time ti " +
+                        "WHERE r.member.id = :memberId",
+                        Reservation.class)
+                .setParameter("memberId", memberId)
                 .getResultList();
     }
 }

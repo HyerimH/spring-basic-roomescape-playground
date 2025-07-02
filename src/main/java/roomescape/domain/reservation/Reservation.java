@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
+import roomescape.domain.member.Member;
 import roomescape.domain.theme.Theme;
 import roomescape.domain.time.Time;
 
@@ -26,6 +27,10 @@ public class Reservation {
     private String date;
 
     @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne
     @JoinColumn(name = "time_id", nullable = false)
     private Time time;
 
@@ -33,12 +38,15 @@ public class Reservation {
     @JoinColumn(name = "theme_id", nullable = false)
     private Theme theme;
 
-    public Reservation(Long id, String name, String date, Time time, Theme theme) {
-        this.id = id;
+    public Reservation() {
+    }
+
+    public Reservation(String name, String date, Time time, Theme theme, Member member) {
         this.name = name;
         this.date = date;
         this.time = time;
         this.theme = theme;
+        this.member = member;
     }
 
     public Reservation(String name, String date, Time time, Theme theme) {
@@ -48,6 +56,7 @@ public class Reservation {
         this.theme = theme;
     }
 
-    public Reservation() {
+    public void setMember(Member member) {
+        this.member = member;
     }
 }
