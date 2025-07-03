@@ -32,7 +32,7 @@ public class JpaTest {
         entityManager.persist(time);
         entityManager.flush();
 
-        Time persistTime = timeRepository.findById(time.getId()).orElse(null);
+        Time persistTime = timeRepository.findById(time.getId());
 
         assertThat(persistTime.getValue()).isEqualTo(time.getValue());
     }
