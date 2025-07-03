@@ -1,4 +1,10 @@
 package roomescape.domain.waiting.dto;
 
-public class WaitingWithRank {
+import roomescape.domain.waiting.Waiting;
+
+public record WaitingWithRank(
+        Waiting waiting,
+        Long rank
+) {
+
 }

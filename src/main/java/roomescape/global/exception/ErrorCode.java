@@ -38,7 +38,15 @@ public enum ErrorCode {
     INVALID_EMAILPASSWORD(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 잘못되었습니다."),
 
     // 예약
-    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 예약을 찾을 수 없습니다.");
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 예약을 찾을 수 없습니다."),
+
+    DUPLICATE_RESERVATION(HttpStatus.BAD_REQUEST, "중복 예약 대기입니다."),
+
+    // 테마
+    THEME_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 테마를 찾을 수 없습니다."),
+
+    // 시간
+    TIME_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 시간을 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;

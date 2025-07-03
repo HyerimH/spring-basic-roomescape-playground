@@ -2,6 +2,7 @@ package roomescape.domain.time;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationRepository;
 
@@ -31,10 +32,12 @@ public class TimeService {
         return timeRepository.findAll();
     }
 
+    @Transactional
     public Time save(Time time) {
         return timeRepository.save(time);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         timeRepository.deleteById(id);
     }

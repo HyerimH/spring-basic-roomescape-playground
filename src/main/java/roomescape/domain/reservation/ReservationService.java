@@ -1,15 +1,16 @@
 package roomescape.domain.reservation;
 
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberRepository;
 import roomescape.domain.reservation.dto.MyReservationResponse;
 import roomescape.domain.reservation.dto.ReservationRequest;
 import roomescape.domain.reservation.dto.ReservationResponse;
+import roomescape.domain.waiting.WaitingRepository;
 import roomescape.global.auth.LoginMember;
 
 @Service
@@ -18,15 +19,27 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final MemberRepository memberRepository;
+    private final WaitingRepository waitingRepository;
 
     public List<MyReservationResponse> findMyReservations(LoginMember member) {
-        return reservationRepository.findByMemberId(member.id())
+        List<MyReservationResponse> reservationList = reservationRepository.findByMemberId(member.id())
                 .stream()
                 .map(reservation -> MyReservationResponse.from(reservation, "예약"))
                 .toList();
+
+        List<MyReservationResponse> waitingList = waitingRepository.findWaitingsWithRankByMemberId(member.id())
+                .stream()
+                .map(it -> new MyReservationResponse(
+                                it.waiting().getId(),
+                                it.waiting().getTheme().getName(),
+                                it.waiting().getDate(),
+                                it.waiting().getTime().getValue(),
+                        (it.rank() + 1) + "번째 예약대기"))
+                .toList();
+
+        return Stream.concat(reservationList.stream(), waitingList.stream()).toList();
     }
 
-    @Transactional
     public ReservationResponse save(ReservationRequest reservationRequest, LoginMember member) {
         Member reservationMember = memberRepository.findById(member.id());
         if (reservationMember.isAdmin()) {

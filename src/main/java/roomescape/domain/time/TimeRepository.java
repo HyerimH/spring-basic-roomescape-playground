@@ -1,11 +1,13 @@
 package roomescape.domain.time;
 
+import static roomescape.global.exception.ErrorCode.TIME_NOT_FOUND;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import roomescape.global.exception.CustomException;
 
 @Repository
 public class TimeRepository {
@@ -13,9 +15,12 @@ public class TimeRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Optional<Time> findById(Long id) {
+    public Time findById(Long id) {
         Time time = entityManager.find(Time.class, id);
-        return Optional.ofNullable(time);
+        if(time == null){
+            throw new CustomException(TIME_NOT_FOUND);
+        }
+        return time;
     }
 
     public List<Time> findAll() {

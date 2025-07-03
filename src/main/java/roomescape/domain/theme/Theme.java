@@ -23,7 +23,7 @@ public class Theme {
 
     private boolean deleted;
 
-    public Theme() {
+    protected Theme() {
     }
 
     public Theme(Long id, String name, String description) {

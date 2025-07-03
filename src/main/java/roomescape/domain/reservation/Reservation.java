@@ -38,7 +38,7 @@ public class Reservation {
     @JoinColumn(name = "theme_id", nullable = false)
     private Theme theme;
 
-    public Reservation() {
+    protected Reservation() {
     }
 
     public Reservation(String name, String date, Time time, Theme theme, Member member) {
