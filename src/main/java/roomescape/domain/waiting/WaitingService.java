@@ -23,6 +23,7 @@ import roomescape.global.exception.CustomException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class WaitingService {
 
     private final WaitingRepository waitingRepository;

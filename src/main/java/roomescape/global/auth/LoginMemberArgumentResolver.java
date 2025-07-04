@@ -16,8 +16,6 @@ import roomescape.global.exception.CustomException;
 @RequiredArgsConstructor
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final AuthService authService;
-
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterType().equals(LoginMember.class) &&

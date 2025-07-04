@@ -34,17 +34,14 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
         }
 
         Long memberId = jwtTokenProvider.extractMemberId(token);
-        Member member = memberService.getMemberById(memberId);
+        Member member = memberService.getMemberById(memberId)
+                .orElseThrow(() -> new CustomException(INVALID_TOKEN));
 
-        if (member == null) {
-            throw new CustomException(INVALID_TOKEN);
-        }
         if (isAdminRequest(request) && !member.isAdmin()) {
             throw new CustomException(FORBIDDEN);
         }
 
-        request.setAttribute("loginMember",
-                new LoginMember(member.getId(), member.getName(), member.getEmail(), member.getRole()));
+        request.setAttribute("loginMember", LoginMember.from(member));
         return true;
     }
 

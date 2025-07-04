@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberRepository;
 import roomescape.domain.reservation.dto.MyReservationResponse;
@@ -24,6 +25,7 @@ import roomescape.global.exception.CustomException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -33,24 +35,13 @@ public class ReservationService {
     private final WaitingRepository waitingRepository;
 
     public List<MyReservationResponse> findMyReservations(LoginMember member) {
-        List<MyReservationResponse> reservationList = reservationRepository.findByMemberId(member.id())
-                .stream()
-                .map(reservation -> MyReservationResponse.from(reservation, "예약"))
-                .toList();
-
-        List<MyReservationResponse> waitingList = waitingRepository.findWaitingsWithRankByMemberId(member.id())
-                .stream()
-                .map(it -> new MyReservationResponse(
-                        it.waiting().getId(),
-                        it.waiting().getTheme().getName(),
-                        it.waiting().getDate(),
-                        it.waiting().getTime().getValue(),
-                        (it.rank() + 1) + "번째 예약대기"))
-                .toList();
+        List<MyReservationResponse> reservationList = getReservationResponses(member.id());
+        List<MyReservationResponse> waitingList = getWaitingResponses(member.id());
 
         return Stream.concat(reservationList.stream(), waitingList.stream()).toList();
     }
 
+    @Transactional
     public ReservationResponse save(ReservationRequest request, LoginMember loginMember) {
         Member member = findMemberOrThrow(loginMember.id());
         Time time = findValidTimeOrThrow(request.time());
@@ -68,19 +59,34 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
 
-        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
-                reservation.getTime().getValue(), reservation.getTheme().getName());
+        return ReservationResponse.from(reservation);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         reservationRepository.deleteById(id);
     }
 
     public List<ReservationResponse> findAll() {
         return reservationRepository.findAll().stream()
-                .map(it -> new ReservationResponse(it.getId(), it.getName(), it.getTheme().getName(),
-                        it.getDate(),
-                        it.getTime().getValue()))
+                .map(ReservationResponse::from)
+                .toList();
+    }
+
+    private List<MyReservationResponse> getReservationResponses(Long memberId) {
+        return reservationRepository.findByMemberId(memberId).stream()
+                .map(reservation -> MyReservationResponse.from(reservation, "예약"))
+                .toList();
+    }
+
+    private List<MyReservationResponse> getWaitingResponses(Long memberId) {
+        return waitingRepository.findWaitingsWithRankByMemberId(memberId).stream()
+                .map(waiting -> new MyReservationResponse(
+                        waiting.waiting().getId(),
+                        waiting.waiting().getTheme().getName(),
+                        waiting.waiting().getDate(),
+                        waiting.waiting().getTime().getValue(),
+                        (waiting.rank() + 1) + "번째 예약대기"))
                 .toList();
     }
 

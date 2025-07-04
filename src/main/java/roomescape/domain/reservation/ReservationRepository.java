@@ -1,17 +1,10 @@
 package roomescape.domain.reservation;
 
-import static roomescape.global.exception.ErrorCode.RESERVATION_NOT_FOUND;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.member.Member;
-import roomescape.domain.reservation.dto.ReservationRequest;
-import roomescape.domain.theme.Theme;
-import roomescape.domain.time.Time;
 
 import java.util.List;
-import roomescape.global.exception.CustomException;
 
 @Repository
 public class ReservationRepository {

@@ -9,6 +9,7 @@ import roomescape.domain.member.dto.MemberResponse;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
