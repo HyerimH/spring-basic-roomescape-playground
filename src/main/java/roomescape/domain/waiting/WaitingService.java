@@ -1,6 +1,9 @@
 package roomescape.domain.waiting;
 
 import static roomescape.global.exception.ErrorCode.DUPLICATE_RESERVATION;
+import static roomescape.global.exception.ErrorCode.THEME_NOT_FOUND;
+import static roomescape.global.exception.ErrorCode.TIME_NOT_FOUND;
+import static roomescape.global.exception.ErrorCode.USER_NOT_FOUND;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +32,12 @@ public class WaitingService {
 
     @Transactional
     public WaitingResponse save(WaitingRequest waitingRequest, LoginMember loginMember) {
-        Member member = memberRepository.findById(loginMember.id());
-
-        Theme theme = themeRepository.findById(waitingRequest.theme());
-        Time time = timeRepository.findById(waitingRequest.time());
+        Member member = memberRepository.findById(loginMember.id())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Theme theme = themeRepository.findById(waitingRequest.theme())
+                .orElseThrow(() -> new CustomException(THEME_NOT_FOUND));
+        Time time = timeRepository.findById(waitingRequest.time())
+                .orElseThrow(() -> new CustomException(TIME_NOT_FOUND));
 
         List<Waiting> existingWaitings = waitingRepository.findByThemeIdAndDateAndTimeId(
                 waitingRequest.date(), theme, time);

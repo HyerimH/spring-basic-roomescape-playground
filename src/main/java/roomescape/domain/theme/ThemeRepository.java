@@ -1,13 +1,11 @@
 package roomescape.domain.theme;
 
-import static roomescape.global.exception.ErrorCode.THEME_NOT_FOUND;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import roomescape.global.exception.CustomException;
 
 @Repository
 public class ThemeRepository {
@@ -15,12 +13,8 @@ public class ThemeRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public Theme findById(Long id){
-        Theme theme = entityManager.find(Theme.class, id);
-        if(theme == null){
-            throw new CustomException(THEME_NOT_FOUND);
-        }
-        return theme;
+    public Optional<Theme> findById(Long id){
+        return Optional.ofNullable(entityManager.find(Theme.class, id));
     }
 
     public List<Theme> findAll() {

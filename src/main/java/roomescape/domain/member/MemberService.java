@@ -1,5 +1,6 @@
 package roomescape.domain.member;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ public class MemberService {
         return new MemberResponse(member.getId(), member.getName(), member.getEmail());
     }
 
-    public Member getMemberById(Long id){
+    public Optional<Member> getMemberById(Long id){
         return memberRepository.findById(id);
     }
 }

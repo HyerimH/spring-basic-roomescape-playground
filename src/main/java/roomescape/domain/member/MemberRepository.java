@@ -1,11 +1,11 @@
 package roomescape.domain.member;
 
 import static roomescape.global.exception.ErrorCode.INVALID_EMAILPASSWORD;
-import static roomescape.global.exception.ErrorCode.USER_NOT_FOUND;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import roomescape.global.exception.CustomException;
 
@@ -31,27 +31,24 @@ public class MemberRepository {
                     .setParameter("email", email)
                     .setParameter("password", password)
                     .getSingleResult();
-        } catch (EmptyResultDataAccessException e) {
+        } catch (NoResultException e) {
             throw new CustomException(INVALID_EMAILPASSWORD);
         }
     }
 
-    public Member findByName(String name) {
+    public Optional<Member> findByName(String name) {
         try {
-           return entityManager.createQuery(
+           Member member = entityManager.createQuery(
                    "SELECT m FROM Member m WHERE m.name = :name", Member.class)
                    .setParameter("name", name)
                    .getSingleResult();
-        } catch (EmptyResultDataAccessException e) {
-            throw new CustomException(USER_NOT_FOUND);
+           return Optional.of(member);
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
     }
 
-    public Member findById(Long id) {
-      Member member = entityManager.find(Member.class, id);
-      if(member == null){
-          throw new CustomException(USER_NOT_FOUND);
-      }
-      return member;
+    public Optional<Member> findById(Long id) {
+        return Optional.ofNullable(entityManager.find(Member.class, id));
     }
 }
