@@ -28,25 +28,12 @@ public class ReservationRepository {
                 .getResultList();
     }
 
-    public Reservation save(ReservationRequest reservationRequest, Member member) {
-        Time time = entityManager.find(Time.class, reservationRequest.time());
-        if (time == null || time.isDeleted()) {
-            throw new CustomException(RESERVATION_NOT_FOUND);
+    public Reservation save(Reservation reservation) {
+        if (reservation.getId() == null) {
+            entityManager.persist(reservation);
+        } else {
+            entityManager.merge(reservation);
         }
-
-        Theme theme = entityManager.find(Theme.class, reservationRequest.theme());
-        if (theme == null) {
-            throw new CustomException(RESERVATION_NOT_FOUND);
-        }
-
-        Reservation reservation = new Reservation(
-                reservationRequest.name(),
-                reservationRequest.date(),
-                time,
-                theme,
-                member
-        );
-        entityManager.persist(reservation);
         return reservation;
     }
 

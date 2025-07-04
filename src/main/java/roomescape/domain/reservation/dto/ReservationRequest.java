@@ -24,13 +24,4 @@ public record ReservationRequest(
                 request.time()
         );
     }
-
-    public static ReservationRequest forAdmin(ReservationRequest request, String name) {
-        return new ReservationRequest(
-                name,
-                request.date(),
-                request.theme(),
-                request.time()
-        );
-    }
 }

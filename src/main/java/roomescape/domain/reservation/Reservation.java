@@ -27,7 +27,7 @@ public class Reservation {
     private String date;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne
@@ -54,9 +54,5 @@ public class Reservation {
         this.date = date;
         this.time = time;
         this.theme = theme;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
     }
 }
