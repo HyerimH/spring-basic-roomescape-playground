@@ -43,9 +43,12 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse save(ReservationRequest request, LoginMember loginMember) {
-        Member member = findMemberOrThrow(loginMember.id());
-        Time time = findValidTimeOrThrow(request.time());
-        Theme theme = findValidThemeOrThrow(request.theme());
+        Member member = memberRepository.findById(loginMember.id())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Theme theme = themeRepository.findById(request.theme())
+                .orElseThrow(() -> new CustomException(THEME_NOT_FOUND));
+        Time time = timeRepository.findById(request.time())
+                .orElseThrow(() -> new CustomException(TIME_NOT_FOUND));
 
         String name = member.isAdmin() ? request.name() : loginMember.name();
 
@@ -75,41 +78,13 @@ public class ReservationService {
 
     private List<MyReservationResponse> getReservationResponses(Long memberId) {
         return reservationRepository.findByMemberId(memberId).stream()
-                .map(reservation -> MyReservationResponse.from(reservation, "예약"))
+                .map(MyReservationResponse::from)
                 .toList();
     }
 
     private List<MyReservationResponse> getWaitingResponses(Long memberId) {
         return waitingRepository.findWaitingsWithRankByMemberId(memberId).stream()
-                .map(waiting -> new MyReservationResponse(
-                        waiting.waiting().getId(),
-                        waiting.waiting().getTheme().getName(),
-                        waiting.waiting().getDate(),
-                        waiting.waiting().getTime().getValue(),
-                        (waiting.rank() + 1) + "번째 예약대기"))
+                .map(MyReservationResponse::from)
                 .toList();
-    }
-
-    private Member findMemberOrThrow(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-    }
-
-    private Time findValidTimeOrThrow(Long id) {
-        Time time = timeRepository.findById(id)
-                .orElseThrow(() -> new CustomException(TIME_NOT_FOUND));
-        if (time.isDeleted()) {
-            throw new CustomException(TIME_NOT_FOUND);
-        }
-        return time;
-    }
-
-    private Theme findValidThemeOrThrow(Long id) {
-        Theme theme = themeRepository.findById(id)
-                .orElseThrow(() -> new CustomException(THEME_NOT_FOUND));
-        if (theme.isDeleted()) {
-            throw new CustomException(THEME_NOT_FOUND);
-        }
-        return theme;
     }
 }
