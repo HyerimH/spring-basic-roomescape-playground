@@ -1,13 +1,13 @@
 package roomescape.domain.member;
 
-import static roomescape.global.exception.ErrorCode.INVALID_EMAILPASSWORD;
+import static roomescape.exception.ErrorCode.INVALID_EMAILPASSWORD;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
-import roomescape.global.exception.CustomException;
+import roomescape.exception.CustomException;
 
 @Repository
 public class MemberRepository {

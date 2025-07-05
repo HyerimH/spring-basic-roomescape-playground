@@ -1,4 +1,4 @@
-package roomescape.global.auth;
+package roomescape.auth;
 
 import roomescape.domain.member.Member;
 

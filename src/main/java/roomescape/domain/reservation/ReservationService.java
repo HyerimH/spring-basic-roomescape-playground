@@ -1,8 +1,8 @@
 package roomescape.domain.reservation;
 
-import static roomescape.global.exception.ErrorCode.THEME_NOT_FOUND;
-import static roomescape.global.exception.ErrorCode.TIME_NOT_FOUND;
-import static roomescape.global.exception.ErrorCode.USER_NOT_FOUND;
+import static roomescape.exception.ErrorCode.THEME_NOT_FOUND;
+import static roomescape.exception.ErrorCode.TIME_NOT_FOUND;
+import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
 
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ import roomescape.domain.theme.ThemeRepository;
 import roomescape.domain.time.Time;
 import roomescape.domain.time.TimeRepository;
 import roomescape.domain.waiting.WaitingRepository;
-import roomescape.global.auth.LoginMember;
-import roomescape.global.exception.CustomException;
+import roomescape.auth.LoginMember;
+import roomescape.exception.CustomException;
 
 @Service
 @RequiredArgsConstructor

@@ -1,8 +1,8 @@
-package roomescape.global.auth;
+package roomescape.auth;
 
-import static roomescape.global.exception.ErrorCode.EMPTY_TOKEN;
-import static roomescape.global.exception.ErrorCode.FORBIDDEN;
-import static roomescape.global.exception.ErrorCode.INVALID_TOKEN;
+import static roomescape.exception.ErrorCode.EMPTY_TOKEN;
+import static roomescape.exception.ErrorCode.FORBIDDEN;
+import static roomescape.exception.ErrorCode.INVALID_TOKEN;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberService;
-import roomescape.global.common.CookieUtil;
-import roomescape.global.exception.CustomException;
+import roomescape.exception.CustomException;
 
 @Component
 @RequiredArgsConstructor

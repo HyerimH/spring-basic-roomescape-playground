@@ -1,4 +1,4 @@
-package roomescape.global.exception.controller;
+package roomescape.exception.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,10 +9,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import roomescape.global.exception.CustomException;
-import roomescape.global.exception.ErrorCode;
-import roomescape.global.exception.ErrorResponse;
-import roomescape.global.exception.ValidErrorResponse;
+import roomescape.exception.CustomException;
+import roomescape.exception.ErrorCode;
+import roomescape.exception.ErrorResponse;
+import roomescape.exception.ValidErrorResponse;
 
 @Slf4j
 @RestControllerAdvice

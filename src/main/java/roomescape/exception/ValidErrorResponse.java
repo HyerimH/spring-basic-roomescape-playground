@@ -1,4 +1,4 @@
-package roomescape.global.exception;
+package roomescape.exception;
 
 import java.util.Map;
 import lombok.Getter;

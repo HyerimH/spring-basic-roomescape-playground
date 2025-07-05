@@ -1,9 +1,8 @@
-package roomescape.global.auth;
+package roomescape.auth;
 
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import roomescape.global.common.CookieUtil;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberRepository;
 

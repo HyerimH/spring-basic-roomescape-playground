@@ -14,8 +14,8 @@ import java.util.List;
 import roomescape.domain.reservation.dto.MyReservationResponse;
 import roomescape.domain.reservation.dto.ReservationRequest;
 import roomescape.domain.reservation.dto.ReservationResponse;
-import roomescape.global.auth.AuthenticatedMember;
-import roomescape.global.auth.LoginMember;
+import roomescape.auth.AuthenticatedMember;
+import roomescape.auth.LoginMember;
 
 @RestController
 public class ReservationController {

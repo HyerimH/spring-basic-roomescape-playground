@@ -1,6 +1,6 @@
-package roomescape.global.auth;
+package roomescape.auth;
 
-import static roomescape.global.exception.ErrorCode.LOGIN_REQUIRED;
+import static roomescape.exception.ErrorCode.LOGIN_REQUIRED;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import roomescape.global.exception.CustomException;
+import roomescape.exception.CustomException;
 
 @Component
 @RequiredArgsConstructor

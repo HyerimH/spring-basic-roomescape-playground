@@ -1,4 +1,4 @@
-package roomescape.global.exception;
+package roomescape.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

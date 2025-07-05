@@ -3,8 +3,8 @@ package roomescape.domain.member;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import roomescape.global.exception.CustomException;
-import roomescape.global.exception.ErrorCode;
+import roomescape.exception.CustomException;
+import roomescape.exception.ErrorCode;
 
 @Getter
 @RequiredArgsConstructor
