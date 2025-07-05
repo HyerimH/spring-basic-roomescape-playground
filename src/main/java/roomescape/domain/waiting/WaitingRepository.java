@@ -50,8 +50,7 @@ public class WaitingRepository {
     }
 
     public Optional<Waiting> findById(Long id) {
-        Waiting waiting = entityManager.find(Waiting.class, id);
-        return Optional.ofNullable(waiting);
+        return Optional.ofNullable(entityManager.find(Waiting.class, id));
     }
 
     public void deleteById(Long id) {

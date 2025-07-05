@@ -14,7 +14,12 @@ public class ThemeRepository {
     private EntityManager entityManager;
 
     public Optional<Theme> findById(Long id){
-        return Optional.ofNullable(entityManager.find(Theme.class, id));
+        return entityManager.createQuery("SELECT t FROM Theme t WHERE t.id = :id AND t.deleted = false",
+                Theme.class)
+                .setParameter("id", id)
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 
     public List<Theme> findAll() {
