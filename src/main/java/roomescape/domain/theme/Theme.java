@@ -1,11 +1,29 @@
 package roomescape.domain.theme;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Getter;
+
+@Getter
+@Entity
 public class Theme {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String description;
 
-    public Theme() {
+    private boolean deleted;
+
+    protected Theme() {
     }
 
     public Theme(Long id, String name, String description) {
@@ -19,15 +37,7 @@ public class Theme {
         this.description = description;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
+    public void delete() {
+        this.deleted = true;
     }
 }

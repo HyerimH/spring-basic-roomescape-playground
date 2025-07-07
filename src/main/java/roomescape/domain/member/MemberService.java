@@ -1,28 +1,27 @@
 package roomescape.domain.member;
 
-import static roomescape.global.exception.ErrorCode.USER_NOT_FOUND;
-
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import roomescape.global.exception.CustomException;
+import org.springframework.transaction.annotation.Transactional;
+import roomescape.domain.member.dto.MemberRequest;
+import roomescape.domain.member.dto.MemberResponse;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
-    private MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
+    @Transactional
     public MemberResponse createMember(MemberRequest memberRequest) {
-        Member member = memberDao.save(
+        Member member = memberRepository.save(
                 new Member(memberRequest.name(), memberRequest.email(), memberRequest.password(), "USER"));
         return new MemberResponse(member.getId(), member.getName(), member.getEmail());
     }
 
-    public Member getMemberById(Long id){
-        Member member = memberDao.findById(id);
-        if(member == null){
-            throw new CustomException(USER_NOT_FOUND);
-        }
-        return member;
+    public Optional<Member> getMemberById(Long id){
+        return memberRepository.findById(id);
     }
 }
