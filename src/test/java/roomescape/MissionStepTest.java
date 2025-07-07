@@ -64,6 +64,8 @@ public class MissionStepTest {
         params.put("time", "1");
         params.put("theme", "1");
 
+        params.put("name", "어드민");
+
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .body(params)
                 .cookie("token", token)
@@ -110,7 +112,7 @@ public class MissionStepTest {
                 .cookie("token", brownToken)
                 .get("/admin")
                 .then().log().all()
-                .statusCode(401);
+                .statusCode(403);
 
         String adminToken = createToken("admin@email.com", "password");
 
