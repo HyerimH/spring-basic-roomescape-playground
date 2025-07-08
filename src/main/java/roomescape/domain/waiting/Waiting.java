@@ -33,7 +33,7 @@ public class Waiting {
 
     private String date;
 
-    protected Waiting(){
+    protected Waiting() {
     }
 
     public Waiting(Member member, Time time, Theme theme, String date) {

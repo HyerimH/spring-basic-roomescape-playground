@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TimeService {
+
     private final TimeRepository timeRepository;
     private final ReservationRepository reservationRepository;
 

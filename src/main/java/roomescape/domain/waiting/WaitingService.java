@@ -41,7 +41,7 @@ public class WaitingService {
                 .orElseThrow(() -> new CustomException(TIME_NOT_FOUND));
 
         List<Waiting> existingWaitings = waitingRepository.findByThemeIdAndDateAndTimeId(
-                waitingRequest.date(), theme, time);
+                theme.getId(), waitingRequest.date(), time.getId());
 
         if (!existingWaitings.isEmpty()) {
             throw new CustomException(DUPLICATE_RESERVATION);
