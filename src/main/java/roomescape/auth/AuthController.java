@@ -21,8 +21,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest,
                                       HttpServletResponse response) {
-        Cookie cookie = authService.login(loginRequest);
-        response.addCookie(cookie);
+        String token = authService.login(loginRequest);
+        response.addCookie(CookieUtil.createTokenCookie(token));
         return ResponseEntity.ok().build();
     }
 
@@ -39,8 +39,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletResponse response) {
-        Cookie cookie = authService.logout();
-        response.addCookie(cookie);
+        response.addCookie(CookieUtil.createLogoutCookie());
         return ResponseEntity.ok().build();
     }
 }
