@@ -14,7 +14,6 @@ public class CookieUtil {
     public static Cookie createLogoutCookie() {
         Cookie cookie = new Cookie("token", "");
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setAttribute("SameSite", "Strict");
         cookie.setMaxAge(0);

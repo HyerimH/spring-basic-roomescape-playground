@@ -14,17 +14,15 @@ import roomescape.domain.member.dto.MemberResponse;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     public MemberResponse createMember(MemberRequest memberRequest) {
-        String hashedPassword = passwordEncoder.encode(memberRequest.password());
         Member member = memberRepository.save(
-                new Member(memberRequest.name(), memberRequest.email(), hashedPassword, "USER"));
+                new Member(memberRequest.name(), memberRequest.email(), memberRequest.password(), "USER"));
         return new MemberResponse(member.getId(), member.getName(), member.getEmail());
     }
 
-    public Optional<Member> getMemberById(Long id){
+    public Optional<Member> getMemberById(Long id) {
         return memberRepository.findById(id);
     }
 }

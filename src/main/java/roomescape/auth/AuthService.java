@@ -1,6 +1,7 @@
 package roomescape.auth;
 
 import static roomescape.exception.ErrorCode.INVALID_EMAILPASSWORD;
+import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,14 +16,10 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     public String login(LoginRequest loginRequest) {
-        Member member = memberRepository.findByEmail(loginRequest.email())
+        Member member = memberRepository.findByEmailAndPassword(loginRequest.email(), loginRequest.password())
                 .orElseThrow(() -> new CustomException(INVALID_EMAILPASSWORD));
-        if(!passwordEncoder.matches(loginRequest.password(), member.getPassword())){
-            throw new CustomException(INVALID_EMAILPASSWORD);
-        }
         return jwtTokenProvider.createToken(member);
     }
 }
