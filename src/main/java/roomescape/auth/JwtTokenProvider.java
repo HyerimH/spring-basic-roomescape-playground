@@ -19,8 +19,6 @@ public class JwtTokenProvider {
     public String createToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.getId().toString())
-                .claim("name", member.getName())
-                .claim("role", member.getRole())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
