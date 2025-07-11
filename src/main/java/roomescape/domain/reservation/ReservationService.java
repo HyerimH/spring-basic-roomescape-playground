@@ -1,5 +1,6 @@
 package roomescape.domain.reservation;
 
+import static roomescape.exception.ErrorCode.EXIST_RESERVATION;
 import static roomescape.exception.ErrorCode.THEME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.TIME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
@@ -51,6 +52,10 @@ public class ReservationService {
                 .orElseThrow(() -> new CustomException(TIME_NOT_FOUND));
 
         String name = member.isAdmin() ? request.name() : loginMember.name();
+
+        if(reservationRepository.existsByDateAndThemeAndTime(request.date(), theme, time)){
+            throw new CustomException(EXIST_RESERVATION);
+        }
 
         Reservation reservation = new Reservation(
                 name,
