@@ -2,6 +2,7 @@ package roomescape.domain.member;
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.member.dto.MemberRequest;
@@ -13,11 +14,13 @@ import roomescape.domain.member.dto.MemberResponse;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     public MemberResponse createMember(MemberRequest memberRequest) {
+        String hashedPassword = passwordEncoder.encode(memberRequest.password());
         Member member = memberRepository.save(
-                new Member(memberRequest.name(), memberRequest.email(), memberRequest.password(), "USER"));
+                new Member(memberRequest.name(), memberRequest.email(), hashedPassword, "USER"));
         return new MemberResponse(member.getId(), member.getName(), member.getEmail());
     }
 
