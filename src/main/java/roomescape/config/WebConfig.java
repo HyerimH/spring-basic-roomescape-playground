@@ -14,18 +14,15 @@ import roomescape.auth.LoginMemberArgumentResolver;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AdminAuthInterceptor adminAuthInterceptor;
     private final AuthInterceptor authInterceptor;
+    private final AdminAuthInterceptor adminAuthInterceptor;
     private final LoginMemberArgumentResolver loginMemberArgumentResolver;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(adminAuthInterceptor)
-                .addPathPatterns("/admin/**");
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
-                        "/admin/**",
                         "/login",
                         "/signup",
                         "/",
@@ -35,6 +32,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/js/**",
                         "/image/**",
                         "/favicon.ico");
+        registry.addInterceptor(adminAuthInterceptor)
+                .addPathPatterns("/admin/**");
     }
 
     @Override
