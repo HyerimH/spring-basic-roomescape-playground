@@ -42,10 +42,10 @@ public class WaitingService {
         Time time = timeRepository.findById(waitingRequest.time())
                 .orElseThrow(() -> new CustomException(TIME_NOT_FOUND));
 
-        List<Waiting> existingWaitings = waitingRepository.findAllWithDetails(
-                theme.getId(), waitingRequest.date(), time.getId());
+        boolean isDuplicate = waitingRepository.existsByMemberIdAndThemeIdAndDateAndTimeId(
+                member.getId(), theme.getId(), waitingRequest.date(), time.getId());
 
-        if (!existingWaitings.isEmpty()) {
+        if (isDuplicate) {
             throw new CustomException(DUPLICATE_RESERVATION);
         }
 

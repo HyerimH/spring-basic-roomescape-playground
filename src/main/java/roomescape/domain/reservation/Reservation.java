@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import roomescape.domain.member.Member;
 import roomescape.domain.theme.Theme;
@@ -15,6 +17,7 @@ import roomescape.domain.time.Time;
 
 @Getter
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"date", "theme_id", "time_id"}))
 public class Reservation {
 
     @Id
