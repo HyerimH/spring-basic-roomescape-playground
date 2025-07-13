@@ -1,9 +1,11 @@
 package roomescape.domain.waiting;
 
 import static roomescape.exception.ErrorCode.DUPLICATE_RESERVATION;
+import static roomescape.exception.ErrorCode.FORBIDDEN;
 import static roomescape.exception.ErrorCode.THEME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.TIME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
+import static roomescape.exception.ErrorCode.WAITING_NOT_FOUND;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,7 @@ public class WaitingService {
         Time time = timeRepository.findById(waitingRequest.time())
                 .orElseThrow(() -> new CustomException(TIME_NOT_FOUND));
 
-        List<Waiting> existingWaitings = waitingRepository.findByThemeIdAndDateAndTimeId(
+        List<Waiting> existingWaitings = waitingRepository.findAllWithDetails(
                 theme.getId(), waitingRequest.date(), time.getId());
 
         if (!existingWaitings.isEmpty()) {
@@ -57,7 +59,14 @@ public class WaitingService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        waitingRepository.deleteById(id);
+    public void deleteById(Long waitingId, Long loginMemberId) {
+        Waiting waiting = waitingRepository.findById(waitingId)
+                .orElseThrow(()-> new CustomException(WAITING_NOT_FOUND));
+
+        if(!waiting.getMember().getId().equals(loginMemberId)){
+            throw new CustomException(FORBIDDEN);
+        }
+
+        waitingRepository.deleteById(waitingId);
     }
 }

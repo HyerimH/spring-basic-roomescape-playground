@@ -9,7 +9,11 @@ import roomescape.domain.waiting.dto.WaitingWithRank;
 @Repository
 public interface WaitingRepository extends JpaRepository<Waiting, Long> {
 
-    List<Waiting> findByThemeIdAndDateAndTimeId(Long themeId, String date, Long timeId);
+    @Query("SELECT w FROM Waiting w " +
+           "JOIN FETCH w.theme " +
+           "JOIN FETCH w.time " +
+           "JOIN FETCH w.member")
+    List<Waiting> findAllWithDetails(Long themeId, String date, Long timeId);
 
     @Query("SELECT new roomescape.domain.waiting.dto.WaitingWithRank(w, " +
            "    (SELECT CAST(COUNT(w2) AS Long) " +
