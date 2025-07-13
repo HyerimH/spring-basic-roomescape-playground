@@ -1,6 +1,8 @@
 package roomescape.domain.reservation;
 
 import static roomescape.exception.ErrorCode.EXIST_RESERVATION;
+import static roomescape.exception.ErrorCode.FORBIDDEN;
+import static roomescape.exception.ErrorCode.RESERVATION_NOT_FOUND;
 import static roomescape.exception.ErrorCode.THEME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.TIME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
@@ -71,8 +73,15 @@ public class ReservationService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        reservationRepository.deleteById(id);
+    public void deleteById(Long reservationId, Long loginMemberId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                        .orElseThrow(()-> new CustomException(RESERVATION_NOT_FOUND));
+
+        if(!reservation.getMember().getId().equals(loginMemberId)){
+            throw new CustomException(FORBIDDEN);
+        }
+
+        reservationRepository.deleteById(reservationId);
     }
 
     public List<ReservationResponse> findAll() {
