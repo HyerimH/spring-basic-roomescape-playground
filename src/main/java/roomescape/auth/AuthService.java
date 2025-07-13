@@ -1,10 +1,8 @@
 package roomescape.auth;
 
 import static roomescape.exception.ErrorCode.INVALID_EMAILPASSWORD;
-import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberRepository;

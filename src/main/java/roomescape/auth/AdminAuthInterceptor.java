@@ -1,7 +1,6 @@
 package roomescape.auth;
 
 import static roomescape.exception.ErrorCode.EMPTY_TOKEN;
-import static roomescape.exception.ErrorCode.FORBIDDEN;
 import static roomescape.exception.ErrorCode.INVALID_TOKEN;
 
 import io.micrometer.common.util.StringUtils;
@@ -18,10 +17,6 @@ import roomescape.exception.CustomException;
 @Component
 @RequiredArgsConstructor
 public class AdminAuthInterceptor implements HandlerInterceptor {
-
-    private final MemberService memberService;
-
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
