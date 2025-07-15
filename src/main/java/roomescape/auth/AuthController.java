@@ -16,13 +16,13 @@ import roomescape.domain.member.dto.MemberResponse;
 public class AuthController {
 
     private final AuthService authService;
-    private final CookieUtil cookieUtil;
+    private final CookieUtils cookieUtils;
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest,
             HttpServletResponse response) {
         String token = authService.login(loginRequest);
-        response.addCookie(cookieUtil.createTokenCookie(token));
+        response.addCookie(cookieUtils.createTokenCookie(token));
         return ResponseEntity.ok().build();
     }
 
@@ -39,7 +39,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletResponse response) {
-        response.addCookie(cookieUtil.createLogoutCookie());
+        response.addCookie(cookieUtils.createLogoutCookie());
         return ResponseEntity.ok().build();
     }
 }

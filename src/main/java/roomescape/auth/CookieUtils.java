@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CookieUtil {
+public class CookieUtils {
 
     private final String cookieName;
 
-    public CookieUtil(@Value("${roomescape.auth.cookie.name:token}") String cookieName) {
+    public CookieUtils(@Value("${roomescape.auth.cookie.name:token}") String cookieName) {
         this.cookieName = cookieName;
     }
 

@@ -6,9 +6,11 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import jwt.JwtUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
@@ -177,6 +179,13 @@ public class MissionStepTest {
                 .orElse(null);
 
         assertThat(status).isEqualTo("1번째 예약대기");
+    }
+
+    @Test
+    @DisplayName("@Component 없이 JwtUtils가 빈으로 등록되는지 확인한다.")
+    void 칠단계() {
+        Component componentAnnotation = JwtUtils.class.getAnnotation(Component.class);
+        assertThat(componentAnnotation).isNull();
     }
 }
 

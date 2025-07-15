@@ -1,21 +1,20 @@
-package roomescape.auth;
+package jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import roomescape.domain.member.Member;
 
-@Component
-public class JwtTokenProvider {
+public class JwtUtils {
 
-    @Value("${roomescape.auth.jwt.secret}")
-    private String secretKey;
-    @Value("${roomescape.auth.jwt.expiration}")
-    private long expirationTime;
+    private final String secretKey;
+    private final long expirationTime;
 
+    public JwtUtils(String secretKey, long expirationTime) {
+        this.secretKey = secretKey;
+        this.expirationTime = expirationTime;
+    }
     public String createToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.getId().toString())

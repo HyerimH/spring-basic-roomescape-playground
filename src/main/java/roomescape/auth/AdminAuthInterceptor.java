@@ -11,20 +11,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import roomescape.domain.member.Member;
-import roomescape.domain.member.MemberService;
 import roomescape.exception.CustomException;
 
 @Component
 @RequiredArgsConstructor
 public class AdminAuthInterceptor implements HandlerInterceptor {
 
-    private final CookieUtil cookieUtil;
+    private final CookieUtils cookieUtils;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         Cookie[] cookies = request.getCookies();
-        String token = cookieUtil.extractTokenFromCookies(cookies);
+        String token = cookieUtils.extractTokenFromCookies(cookies);
 
         if (StringUtils.isBlank(token)) {
             throw new CustomException(EMPTY_TOKEN);
