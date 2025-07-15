@@ -1,6 +1,5 @@
 package roomescape.auth;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -17,13 +16,13 @@ import roomescape.domain.member.dto.MemberResponse;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final CookieUtil cookieUtil;
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequest,
-                                      HttpServletResponse response) {
-        Cookie cookie = authService.login(loginRequest);
-        response.addCookie(cookie);
+            HttpServletResponse response) {
+        String token = authService.login(loginRequest);
+        response.addCookie(cookieUtil.createTokenCookie(token));
         return ResponseEntity.ok().build();
     }
 
@@ -40,8 +39,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity logout(HttpServletResponse response) {
-        Cookie cookie = authService.logout();
-        response.addCookie(cookie);
+        response.addCookie(cookieUtil.createLogoutCookie());
         return ResponseEntity.ok().build();
     }
 }

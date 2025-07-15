@@ -23,8 +23,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
-        log.info("ValidationException occurred: {}", e.getMessage());
-        e.printStackTrace();
+        log.info("ValidationException occurred: {}", e.getMessage(), e);
         Map<String, String> validation = new HashMap<>();
         for (FieldError fieldError : e.getFieldErrors()) {
             validation.put(fieldError.getField(), fieldError.getDefaultMessage());
@@ -39,8 +38,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
-        log.info("CustomException occurred: {}", e.getMessage());
-        e.printStackTrace();
+        log.info("CustomException occurred: {}", e.getMessage(), e);
         ErrorCode errorCode = e.getErrorCode();
         ErrorResponse response = new ErrorResponse(errorCode, errorCode.getMessage());
         return ResponseEntity.status(errorCode.getStatus()).body(response);
@@ -51,8 +49,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.error("Unhandled Exception occurred: {}", e.getMessage());
-        e.printStackTrace();
+        log.warn("Unhandled Exception occurred: {}", e.getMessage(), e);
         ErrorResponse response = new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

@@ -1,11 +1,15 @@
 package roomescape.domain.reservation;
 
+import static roomescape.exception.ErrorCode.EXIST_RESERVATION;
+import static roomescape.exception.ErrorCode.FORBIDDEN;
+import static roomescape.exception.ErrorCode.RESERVATION_NOT_FOUND;
 import static roomescape.exception.ErrorCode.THEME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.TIME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
 
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,6 +56,10 @@ public class ReservationService {
 
         String name = member.isAdmin() ? request.name() : loginMember.name();
 
+        if(reservationRepository.existsByDateAndThemeAndTime(request.date(), theme, time)){
+            throw new CustomException(EXIST_RESERVATION);
+        }
+
         Reservation reservation = new Reservation(
                 name,
                 request.date(),
@@ -60,14 +68,25 @@ public class ReservationService {
                 member
         );
 
-        reservationRepository.save(reservation);
+        try {
+            reservationRepository.save(reservation);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(EXIST_RESERVATION);
+        }
 
         return ReservationResponse.from(reservation);
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        reservationRepository.deleteById(id);
+    public void deleteById(Long reservationId, Long loginMemberId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                        .orElseThrow(()-> new CustomException(RESERVATION_NOT_FOUND));
+
+        if(!reservation.getMember().getId().equals(loginMemberId)){
+            throw new CustomException(FORBIDDEN);
+        }
+
+        reservationRepository.deleteById(reservationId);
     }
 
     public List<ReservationResponse> findAll() {

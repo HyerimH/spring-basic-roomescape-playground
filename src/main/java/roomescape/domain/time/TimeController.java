@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class TimeController {
+
     private final TimeService timeService;
 
     @GetMapping("/times")

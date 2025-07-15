@@ -42,6 +42,10 @@ public enum ErrorCode {
 
     DUPLICATE_RESERVATION(HttpStatus.BAD_REQUEST, "중복 예약 대기입니다."),
 
+    EXIST_RESERVATION(HttpStatus.CONFLICT, "이미 예약되었습니다."),
+
+    WAITING_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 예약 대기를 찾을 수 없습니다."),
+
     // 테마
     THEME_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 테마를 찾을 수 없습니다."),
 

@@ -1,12 +1,15 @@
 package roomescape.domain.waiting;
 
 import static roomescape.exception.ErrorCode.DUPLICATE_RESERVATION;
+import static roomescape.exception.ErrorCode.FORBIDDEN;
 import static roomescape.exception.ErrorCode.THEME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.TIME_NOT_FOUND;
 import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
+import static roomescape.exception.ErrorCode.WAITING_NOT_FOUND;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.member.Member;
@@ -40,15 +43,20 @@ public class WaitingService {
         Time time = timeRepository.findById(waitingRequest.time())
                 .orElseThrow(() -> new CustomException(TIME_NOT_FOUND));
 
-        List<Waiting> existingWaitings = waitingRepository.findByThemeIdAndDateAndTimeId(
-                waitingRequest.date(), theme, time);
+        boolean isDuplicate = waitingRepository.existsByMemberIdAndThemeIdAndDateAndTimeId(
+                member.getId(), theme.getId(), waitingRequest.date(), time.getId());
 
-        if (!existingWaitings.isEmpty()) {
+        if (isDuplicate) {
             throw new CustomException(DUPLICATE_RESERVATION);
         }
 
         Waiting waiting = new Waiting(member, time, theme, waitingRequest.date());
-        waitingRepository.save(waiting);
+
+        try {
+            waitingRepository.save(waiting);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(DUPLICATE_RESERVATION);
+        }
 
         List<WaitingWithRank> waitingsWithRank = waitingRepository.findWaitingsWithRankByMemberId(member.getId());
         Long waitingNumber = (long) waitingsWithRank.size();
@@ -57,7 +65,14 @@ public class WaitingService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        waitingRepository.deleteById(id);
+    public void deleteById(Long waitingId, Long loginMemberId) {
+        Waiting waiting = waitingRepository.findById(waitingId)
+                .orElseThrow(()-> new CustomException(WAITING_NOT_FOUND));
+
+        if(!waiting.getMember().getId().equals(loginMemberId)){
+            throw new CustomException(FORBIDDEN);
+        }
+
+        waitingRepository.deleteById(waitingId);
     }
 }

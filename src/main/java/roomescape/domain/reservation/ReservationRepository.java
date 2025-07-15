@@ -1,62 +1,42 @@
 package roomescape.domain.reservation;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import org.springframework.stereotype.Repository;
+import io.micrometer.common.lang.NonNullApi;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
+import roomescape.domain.theme.Theme;
+import roomescape.domain.time.Time;
 
-@Repository
-public class ReservationRepository {
+@NonNullApi
+public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Query("SELECT r FROM Reservation r " +
+           "JOIN FETCH r.theme " +
+           "JOIN FETCH r.time " +
+           "WHERE r.date = :date AND r.theme.id = :themeId")
+    List<Reservation> findByDateAndThemeId(String date, Long themeId);
 
-    public List<Reservation> findAll() {
-        return entityManager.createQuery(
-                        "SELECT r FROM Reservation r " +
-                        "JOIN r.theme t " +
-                        "JOIN r.time ti",
-                        Reservation.class)
-                .getResultList();
-    }
+    @Query("SELECT r FROM Reservation r " +
+           "JOIN FETCH r.theme " +
+           "JOIN FETCH r.time " +
+           "JOIN FETCH r.member " +
+           "WHERE r.member.id = :memberId")
+    List<Reservation> findByMemberId(Long memberId);
 
-    public Reservation save(Reservation reservation) {
-        if (reservation.getId() == null) {
-            entityManager.persist(reservation);
-        } else {
-            entityManager.merge(reservation);
-        }
-        return reservation;
-    }
+    @Query("SELECT r FROM Reservation r " +
+           "JOIN FETCH r.theme " +
+           "JOIN FETCH r.time " +
+           "JOIN FETCH r.member " +
+           "WHERE r.id = :id")
+    Optional<Reservation> findById(Long id);
 
-    public void deleteById(Long id) {
-        Reservation reservation = entityManager.find(Reservation.class, id);
-        if (reservation != null) {
-            entityManager.remove(reservation);
-        }
-    }
+    @Query("SELECT r FROM Reservation r " +
+           "JOIN FETCH r.theme " +
+           "JOIN FETCH r.time " +
+           "JOIN FETCH r.member")
+    List<Reservation> findAll();
 
-    public List<Reservation> findByDateAndThemeId(String date, Long themeId) {
-        return entityManager.createQuery(
-                        "SELECT r FROM Reservation r " +
-                        "JOIN r.theme t " +
-                        "JOIN r.time ti " +
-                        "WHERE r.date = :date AND t.id = :themeId",
-                        Reservation.class)
-                .setParameter("date", date)
-                .setParameter("themeId", themeId)
-                .getResultList();
-    }
-
-    public List<Reservation> findByMemberId(Long memberId) {
-        return entityManager.createQuery(
-                        "SELECT r FROM Reservation r " +
-                        "JOIN r.theme t " +
-                        "JOIN r.time ti " +
-                        "WHERE r.member.id = :memberId",
-                        Reservation.class)
-                .setParameter("memberId", memberId)
-                .getResultList();
-    }
+    boolean existsByDateAndThemeAndTime(String date, Theme theme, Time time);
 }

@@ -23,15 +23,16 @@ public class WaitingController {
     private final WaitingService waitingService;
 
     @PostMapping
-    public ResponseEntity<WaitingResponse> create(@Valid  @RequestBody WaitingRequest waitingRequest,
+    public ResponseEntity<WaitingResponse> create(@Valid @RequestBody WaitingRequest waitingRequest,
             @AuthenticatedMember LoginMember loginMember) {
         WaitingResponse waitingResponse = waitingService.save(waitingRequest, loginMember);
         return ResponseEntity.created(URI.create("/waitings/" + waitingResponse.id())).body(waitingResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        waitingService.deleteById(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+            @AuthenticatedMember LoginMember loginMember) {
+        waitingService.deleteById(id, loginMember.id());
         return ResponseEntity.noContent().build();
     }
 }

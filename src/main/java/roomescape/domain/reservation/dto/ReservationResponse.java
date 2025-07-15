@@ -14,9 +14,9 @@ public record ReservationResponse(
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getTheme().toString(),
+                reservation.getTheme().getName(),
                 reservation.getDate(),
-                reservation.getTime().toString()
+                reservation.getTime().getValue()
         );
     }
 }

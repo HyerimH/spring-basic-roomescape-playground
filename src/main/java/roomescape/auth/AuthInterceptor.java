@@ -1,7 +1,6 @@
 package roomescape.auth;
 
 import static roomescape.exception.ErrorCode.EMPTY_TOKEN;
-import static roomescape.exception.ErrorCode.FORBIDDEN;
 import static roomescape.exception.ErrorCode.INVALID_TOKEN;
 
 import io.micrometer.common.util.StringUtils;
@@ -17,12 +16,15 @@ import roomescape.exception.CustomException;
 
 @Component
 @RequiredArgsConstructor
-public class AdminAuthInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
+    private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final CookieUtil cookieUtil;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
         Cookie[] cookies = request.getCookies();
         String token = cookieUtil.extractTokenFromCookies(cookies);
 
@@ -30,16 +32,11 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
             throw new CustomException(EMPTY_TOKEN);
         }
 
-        LoginMember loginMember = (LoginMember) request.getAttribute("loginMember");
+        Long memberId = jwtTokenProvider.extractMemberId(token);
+        Member member = memberService.getMemberById(memberId)
+                .orElseThrow(() -> new CustomException(INVALID_TOKEN));
 
-        if (loginMember == null) {
-            throw new CustomException(INVALID_TOKEN);
-        }
-
-        if (!loginMember.isAdmin()) {
-            throw new CustomException(FORBIDDEN);
-        }
-
+        request.setAttribute("loginMember", LoginMember.from(member));
         return true;
     }
 }

@@ -6,9 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
+@SQLDelete(sql = "UPDATE time SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 public class Time {
 
     @Id
@@ -18,7 +22,7 @@ public class Time {
     @Column(name = "time_value", nullable = false)
     private String value;
 
-    private boolean deleted;
+    private boolean deleted = false;
 
     protected Time() {
     }
