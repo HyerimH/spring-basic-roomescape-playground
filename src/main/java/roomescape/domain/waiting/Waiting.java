@@ -16,7 +16,7 @@ import roomescape.domain.time.Time;
 
 @Getter
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"date", "theme_id", "time_id"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"date", "theme_id", "time_id", "member_id"}))
 public class Waiting {
 
     @Id

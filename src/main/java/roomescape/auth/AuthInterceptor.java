@@ -20,12 +20,13 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CookieUtil cookieUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         Cookie[] cookies = request.getCookies();
-        String token = CookieUtil.extractTokenFromCookies(cookies);
+        String token = cookieUtil.extractTokenFromCookies(cookies);
 
         if (StringUtils.isBlank(token)) {
             throw new CustomException(EMPTY_TOKEN);

@@ -9,6 +9,7 @@ import static roomescape.exception.ErrorCode.WAITING_NOT_FOUND;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.member.Member;
@@ -50,7 +51,12 @@ public class WaitingService {
         }
 
         Waiting waiting = new Waiting(member, time, theme, waitingRequest.date());
-        waitingRepository.save(waiting);
+
+        try {
+            waitingRepository.save(waiting);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(DUPLICATE_RESERVATION);
+        }
 
         List<WaitingWithRank> waitingsWithRank = waitingRepository.findWaitingsWithRankByMemberId(member.getId());
         Long waitingNumber = (long) waitingsWithRank.size();

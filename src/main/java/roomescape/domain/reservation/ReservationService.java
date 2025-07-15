@@ -9,6 +9,7 @@ import static roomescape.exception.ErrorCode.USER_NOT_FOUND;
 
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,7 +68,11 @@ public class ReservationService {
                 member
         );
 
-        reservationRepository.save(reservation);
+        try {
+            reservationRepository.save(reservation);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(EXIST_RESERVATION);
+        }
 
         return ReservationResponse.from(reservation);
     }

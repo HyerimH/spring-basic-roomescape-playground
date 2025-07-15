@@ -1,18 +1,27 @@
 package roomescape.auth;
 
 import jakarta.servlet.http.Cookie;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CookieUtil {
 
-    public static Cookie createTokenCookie(String token) {
-        Cookie cookie = new Cookie("token", token);
+    private final String cookieName;
+
+    public CookieUtil(@Value("${roomescape.auth.cookie.name:token}") String cookieName) {
+        this.cookieName = cookieName;
+    }
+
+    public Cookie createTokenCookie(String token) {
+        Cookie cookie = new Cookie(cookieName, token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         return cookie;
     }
 
-    public static Cookie createLogoutCookie() {
-        Cookie cookie = new Cookie("token", "");
+    public Cookie createLogoutCookie() {
+        Cookie cookie = new Cookie(cookieName, "");
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setAttribute("SameSite", "Strict");
@@ -20,12 +29,12 @@ public class CookieUtil {
         return cookie;
     }
 
-    public static String extractTokenFromCookies(Cookie[] cookies) {
+    public String extractTokenFromCookies(Cookie[] cookies) {
         if (cookies == null) {
             return "";
         }
         for (Cookie cookie : cookies) {
-            if ("token".equals(cookie.getName())) {
+            if (cookieName.equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

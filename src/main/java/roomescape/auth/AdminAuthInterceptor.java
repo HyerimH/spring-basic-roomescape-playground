@@ -1,6 +1,7 @@
 package roomescape.auth;
 
 import static roomescape.exception.ErrorCode.EMPTY_TOKEN;
+import static roomescape.exception.ErrorCode.FORBIDDEN;
 import static roomescape.exception.ErrorCode.INVALID_TOKEN;
 
 import io.micrometer.common.util.StringUtils;
@@ -18,10 +19,12 @@ import roomescape.exception.CustomException;
 @RequiredArgsConstructor
 public class AdminAuthInterceptor implements HandlerInterceptor {
 
+    private final CookieUtil cookieUtil;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         Cookie[] cookies = request.getCookies();
-        String token = CookieUtil.extractTokenFromCookies(cookies);
+        String token = cookieUtil.extractTokenFromCookies(cookies);
 
         if (StringUtils.isBlank(token)) {
             throw new CustomException(EMPTY_TOKEN);
@@ -31,6 +34,10 @@ public class AdminAuthInterceptor implements HandlerInterceptor {
 
         if (loginMember == null) {
             throw new CustomException(INVALID_TOKEN);
+        }
+
+        if (!loginMember.isAdmin()) {
+            throw new CustomException(FORBIDDEN);
         }
 
         return true;
