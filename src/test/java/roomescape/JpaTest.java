@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import roomescape.domain.member.MemberRepository;
 import roomescape.domain.reservation.ReservationRepository;
@@ -15,6 +16,7 @@ import roomescape.domain.theme.ThemeRepository;
 import roomescape.domain.time.Time;
 import roomescape.domain.time.TimeRepository;
 
+@ActiveProfiles("test")
 @DataJpaTest
 @ContextConfiguration(classes = {TimeRepository.class, ReservationRepository.class, MemberRepository.class,
         ThemeRepository.class, RoomescapeApplication.class})

@@ -9,12 +9,14 @@ import java.util.List;
 import jwt.JwtUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.test.context.ActiveProfiles;
 import roomescape.domain.reservation.dto.MyReservationResponse;
 import roomescape.domain.waiting.dto.WaitingResponse;
 import roomescape.auth.LoginRequest;
@@ -22,10 +24,14 @@ import roomescape.domain.reservation.dto.ReservationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @Transactional
 public class MissionStepTest {
+
+    @Value("${roomescape.auth.jwt.secret}")
+    private String secretKey;
 
     @Test
     @DisplayName("로그인 성공 시 토큰이 포함된 쿠키를 반환한다")
@@ -62,11 +68,16 @@ public class MissionStepTest {
         String token = createToken("admin@email.com", "password");  // 일단계에서 토큰을 추출하는 로직을 메서드로 따로 만들어서 활용하세요.
 
         Map<String, String> params = new HashMap<>();
-        params.put("date", "2024-03-01");
+        params.put("date", "2024-01-01");
         params.put("time", "1");
         params.put("theme", "1");
-
         params.put("name", "어드민");
+
+        Map<String, String> params2 = new HashMap<>();
+        params2.put("date", "2024-02-01");
+        params2.put("time", "1");
+        params2.put("theme", "1");
+        params2.put("name", "브라운");
 
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .body(params)
@@ -79,10 +90,8 @@ public class MissionStepTest {
         assertThat(response.statusCode()).isEqualTo(201);
         assertThat(response.as(ReservationResponse.class).name()).isEqualTo("어드민");
 
-        params.put("name", "브라운");
-
         ExtractableResponse<Response> adminResponse = RestAssured.given().log().all()
-                .body(params)
+                .body(params2)
                 .cookie("token", token)
                 .contentType(ContentType.JSON)
                 .post("/reservations")
@@ -186,6 +195,11 @@ public class MissionStepTest {
     void 칠단계() {
         Component componentAnnotation = JwtUtils.class.getAnnotation(Component.class);
         assertThat(componentAnnotation).isNull();
+    }
+
+    @Test
+    void 팔단계() {
+        assertThat(secretKey).isNotBlank();
     }
 }
 
