@@ -1,6 +1,5 @@
 package roomescape;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -16,13 +15,20 @@ import roomescape.domain.time.TimeRepository;
 
 @Component
 @Profile("test")
-@RequiredArgsConstructor
 public class TestDataLoader implements CommandLineRunner {
 
     private final MemberRepository memberRepository;
     private final ThemeRepository themeRepository;
     private final TimeRepository timeRepository;
     private final ReservationRepository reservationRepository;
+
+    public TestDataLoader(MemberRepository memberRepository, ThemeRepository themeRepository,
+            TimeRepository timeRepository, ReservationRepository reservationRepository) {
+        this.memberRepository = memberRepository;
+        this.themeRepository = themeRepository;
+        this.timeRepository = timeRepository;
+        this.reservationRepository = reservationRepository;
+    }
 
     @Override
     public void run(String... args) throws Exception {
