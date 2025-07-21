@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: dev
   h2:
     console:
       enabled: true
@@ -14,5 +12,5 @@ spring:
 roomescape:
   auth:
     jwt:
-      secret: dev-secret
+      secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
       expiration: 300000
