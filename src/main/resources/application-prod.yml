@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: prod
   h2:
     console:
       enabled: false

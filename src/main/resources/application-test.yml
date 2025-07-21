@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: test
   h2:
     console:
       enabled: true
@@ -14,5 +12,5 @@ spring:
 roomescape:
   auth:
     jwt:
-      secret: test-secret
+      secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
       expiration: 300000
